@@ -1,1 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+Practice
+</head>
 
+<body>
+<div>
+<p id="q"> Q </p>
+</div>
+<div>
+<p id="t"> T </p>
+</div>
+<div>
+<button id="show" type="button" onclick=show()>show answer</button>
+<button id="next" type="button" onclick=next()>next</button>
+</div>
+<div>
+<p id="w"> W </p>
+</div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script>
+	var all_quotes;
+	var current, current_q, current_t, current_w;
+	var compact_loader = $.getJSON({'url': "https://raw.githubusercontent.com/danelh/quotes_practice/master/quotes.json", 'async': true});	 
+	compact_loader.done(function(){
+		all_quotes = compact_loader.responseJSON;
+		init();}
+	);
+	
+	function init(){
+		console.log("count: " + all_quotes.length);
+		next();
+	}
+	
+	function next(){
+		current = get_random_from_list(all_quotes,1)[0]		
+		current_q = current[0][0];
+		current_t = current[0][1];
+		current_w = current[1];
+		document.getElementById("q").innerHTML = current_q;
+		document.getElementById("t").innerHTML = "T";
+		update_link_to_word();
+	}
+	
+	function show(){
+		document.getElementById("t").innerHTML = current_t;
+	}
+	
+	function update_link_to_word(){
+		wiki_link = get_wiki_link();
+		link_text = "<a href=\"" + wiki_link + "\" target=\"_blank\">" + current_w + "</a>";
+		link_text_2 = "<a href=\"" + get_WORDS_link() + "\" target=\"_blank\">" + current_w + "</a>";
+		console.log(link_text);
+		document.getElementById("w").innerHTML = link_text + "------------------" + link_text_2;
+	}
+	
+	function get_wiki_link(){			
+		wiki_link ="https://en.wiktionary.org/wiki/" + current_w + "#Latin"; 
+		return wiki_link;
+	}
+	
+	function get_WORDS_link(){
+		return "http://archives.nd.edu/cgi-bin/wordz.pl?keyword=" + current_w;
+	}
+
+	
+	function get_random_from_list(l, count){	
+		var selected = [];
+		while (selected.length < count){
+			current_selected = l[Math.floor(Math.random() * l.length)];
+			if (!selected.includes(current_selected)){
+				selected.push(current_selected);
+			}
+	}
+	
+    return selected;
+  }
+
+
+</script>
+
+</html>
